@@ -1,4 +1,4 @@
-package com.sg.DVDlibrary.dto;
+package com.sg.dvdlibrary.dto;
 
 import java.time.LocalDate;
 

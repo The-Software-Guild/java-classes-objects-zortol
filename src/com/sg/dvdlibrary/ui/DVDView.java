@@ -1,7 +1,7 @@
-package com.sg.DVDlibrary.ui;
+package com.sg.dvdlibrary.ui;
 
 
-import com.sg.DVDlibrary.dto.DVD;
+import com.sg.dvdlibrary.dto.DVD;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -147,17 +147,9 @@ public class DVDView {
     public void editDVDnoExist(){
         io.print("The given DVD does not exist\n");
     }
-//
-//    public void displayExitBanner() {
-//        io.print("Good Bye!!!");
-//    }
-//
-//    public void displayUnknownCommandBanner() {
-//        io.print("Unknown Command!!!");
-//    }
-//
-//    public void displayErrorMessage(String errorMsg) {
-//        io.print("=== ERROR ===");
-//        io.print(errorMsg);
-//    }
+
+    public void displayErrorMessage(String errorMsg) {
+        io.print("=== ERROR ===");
+        io.print(errorMsg);
+    }
 }

@@ -1,6 +1,6 @@
-package com.sg.DVDlibrary.dao;
+package com.sg.dvdlibrary.dao;
 
-import com.sg.DVDlibrary.dto.DVD;
+import com.sg.dvdlibrary.dto.DVD;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -16,7 +16,7 @@ public class DVDdaoFileImpl implements DVDdao {
 
 
     @Override
-    public DVD addDVD(String dvdName, DVD dvd) throws IOException {
+    public DVD addDVD(String dvdName, DVD dvd) throws DVDdaoException{
         this.loadFromFile();
         DVD thisDVD = dvds.put(dvdName,dvd);
         this.writeToFile();
@@ -24,19 +24,19 @@ public class DVDdaoFileImpl implements DVDdao {
     }
 
     @Override
-    public List<DVD> getAllDVDs() {
+    public List<DVD> getAllDVDs() throws DVDdaoException {
         this.loadFromFile();
         return new ArrayList<DVD>(dvds.values());
     }
 
     @Override
-    public DVD getDVD(String dvdName) {
+    public DVD getDVD(String dvdName) throws DVDdaoException {
         this.loadFromFile();
         return this.dvds.get(dvdName);
     }
 
     @Override
-    public DVD removeDVD(String dvdName) throws IOException {
+    public DVD removeDVD(String dvdName) throws DVDdaoException{
         this.loadFromFile();
         DVD dvd = this.dvds.remove(dvdName);
         this.writeToFile();
@@ -44,7 +44,7 @@ public class DVDdaoFileImpl implements DVDdao {
     }
 
     @Override
-    public DVD editDVD(String dvdName,int featureChosen,String editedString) throws IOException {
+    public DVD editDVD(String dvdName,int featureChosen,String editedString) throws DVDdaoException {
         /**
          * 1. Title 2. Release date
          * 3. MPAA rating 4. Director name
@@ -114,14 +114,14 @@ public class DVDdaoFileImpl implements DVDdao {
      * It loads from a file in order to add objects into the hashmap
      * This method calls the private unmarshallingDVD() to convert the lines into objects
      */
-    private void loadFromFile(){
+    private void loadFromFile() throws DVDdaoException{
         Scanner scan;
         try{
             scan = new Scanner(new BufferedReader(new FileReader(DVDFILE)));
 
 
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new DVDdaoException("Could not load data from the file");
         }
 
         String currentLine;
@@ -130,9 +130,13 @@ public class DVDdaoFileImpl implements DVDdao {
         while(scan.hasNextLine()){
             currentLine = scan.nextLine();
 
+            // To prevent empty lines to be skipped so that the program does not crash
+            if(currentLine.isBlank()){
+                continue;
+            }
             currentDVD = this.unmarshallingDVD(currentLine);
-
             this.dvds.put(currentDVD.getTitle(),currentDVD);
+
         }
 
         scan.close();
@@ -167,14 +171,14 @@ public class DVDdaoFileImpl implements DVDdao {
     /**
      * Writes all the dvd to the DVDFILE
      */
-    private void writeToFile() throws IOException {
+    private void writeToFile() throws DVDdaoException {
 
         PrintWriter out;
 
         try{
             out = new PrintWriter(new FileWriter(DVDFILE));
         }catch(IOException e){
-            throw new IOException(e);
+            throw new DVDdaoException("Could not write to file");
         }
 
         String dvdText;

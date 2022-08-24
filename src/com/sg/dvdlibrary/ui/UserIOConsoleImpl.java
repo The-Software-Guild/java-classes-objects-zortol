@@ -1,4 +1,4 @@
-package com.sg.DVDlibrary.ui;
+package com.sg.dvdlibrary.ui;
 
 import java.util.Scanner;
 
